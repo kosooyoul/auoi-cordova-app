@@ -1,0 +1,1 @@
+{"plugins":["cordova-plugin-whitelist","cordova-sqlite-storage","cordova-plugin-network-information","cordova-plugin-firebase","cordova-plugin-firebase-messaging","cordova-plugin-firebase-analytics","cordova-support-android-plugin"]}

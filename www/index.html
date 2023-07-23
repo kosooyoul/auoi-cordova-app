@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>초대장 꾸미기 데모</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="title" content="초대장 꾸미기 데모"/>
+<meta name="description" content="초대장 꾸미기 데모입니다."/>
+<meta name="keywords" content="auoi, invitation"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="초대장 꾸미기 데모"/>
+<meta property="og:description" content="초대장 꾸미기 데모입니다."/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#000000"/>
+<link rel="stylesheet" href="./css/hanulse-board.css?v=20230722"/>
+<style>
+html, body {
+	margin: 0px;
+	width: 100%;
+	height: 100%;
+}
+*, *:focus {
+	outline: none;
+	-webkit-tap-highlight-color: transparent;
+}
+#app {
+	display: grid;
+	grid-template-rows: 52px auto 0px;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	box-shadow: 8px 8px 24px 0px rgba(0, 0, 0, 0.4);
+}
+.head {
+	display: grid;
+	grid-template-columns: 64px auto 64px;
+	position: relative;
+	width: 100%;
+	background: white; /*linear-gradient(00deg, #f0f0f4, #fff6f6, #fff8ff, #ffffff, #fffaff);*/
+	color: black;
+	box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+}
+.head::after {
+	display: grid;
+	content: "";
+	position: absolute;
+	width: 100%;
+	height: 4px;
+	left: 0px;
+	bottom: 0px;
+	background: linear-gradient(0deg, #ff0064, #ff6400);
+	border-bottom: 1px solid #333333;
+}
+.head>.left {
+	display: flex;
+	justify-content: flex-start;
+    align-items: center;
+	padding-left: 20px;
+	font-size: 14px;
+	font-weight: bold;
+	cursor: pointer;
+	user-select: none;
+}
+.head>.left:hover {
+	color: #ff3333;
+}
+.head>.title {
+	display: flex;
+	justify-content: center;
+    align-items: center;
+	font-size: 16px;
+	font-weight: bold;
+	user-select: none;
+}
+.head>.right {
+	display: flex;
+	justify-content: flex-end;
+    align-items: center;
+	padding-right: 20px;
+	font-size: 14px;
+	font-weight: bold;
+	cursor: pointer;
+	user-select: none;
+}
+.head>.right:hover {
+	color: #ff3333;
+}
+
+.content {
+	position: relative;
+	overflow: hidden;
+}
+.content>.board {
+	overflow: hidden;
+	z-index: 0;
+}
+.content>.overlay {
+	display: none;
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	height: 50%;
+	max-height: 320px;
+	bottom: 0px;
+	padding: 2px;
+	border-radius: 16px 16px 0px 0px;
+	background-color: white;
+	box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.4);
+	z-index: 1;
+}
+.content>.overlay::before {
+    display: block;
+	position: absolute;
+    content: "";
+    width: 100%;
+    height: 20px;
+	left: 0px;
+	top: 0px;
+	border-radius: 16px 16px 0px 0px;
+	background: linear-gradient(180deg, #ffffff 0%, transparent);;
+    z-index: 1;
+	pointer-events: none;
+}
+.content>.overlay::after {
+    display: block;
+	position: absolute;
+    content: "";
+    width: 100%;
+    height: 40px;
+	left: 0px;
+	bottom: 0px;
+	background: linear-gradient(0deg, #ffffff 50%, transparent);
+	pointer-events: none;
+}
+.content>.overlay>.content {
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	height: 100%;
+	padding: 0px 8px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+.content>.overlay>.content::after {
+    display: block;
+    content: "";
+    width: 1px;
+    height: 84px;
+}
+.overlay>.content::-webkit-scrollbar { height: 2px; width: 2px; }
+.overlay>.content::-webkit-scrollbar-thumb { background: black; border-radius: 2px; }
+
+.content>.overlay.visibled {
+	display: block;
+	opacity: 1;
+}
+
+.foot {
+	display: flex;
+	justify-content: center;
+    align-items: stretch;
+	position: absolute;
+	width: 100%;
+	height: 48px;
+	bottom: 0px;
+	z-index: 1;
+}
+.foot>.button {
+	display: flex;
+	justify-content: center;
+    align-items: center;
+	position: relative;
+	max-width: 74px;
+	width: 100%;
+	min-width: 58px;
+	font-size: 14px;
+	font-weight: bold;
+	color: white;
+	cursor: pointer;
+	user-select: none;
+}
+.foot>.button>.floating {
+	width: 54px;
+    height: 54px;
+    background: white;
+    color: black;
+    border-radius: 20px 20px 0px 0px;
+    position: absolute;
+    text-align: center;
+    line-height: 52px;
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+    bottom: -4px;
+	border-bottom: 3px solid #ff3333;
+    transition-property: bottom, height, border-radius;
+    transition-timing-function: cubic-bezier(0.05, 1.3, 0.45, 2.39);
+    transition-duration: 400ms;
+}
+.foot>.button:hover>.floating {
+	width: 54px;
+    height: 54px;
+    bottom: 16px;
+    border-radius: 32px;
+	color: #ff3333;
+}
+
+#image-list .items>.item {
+	display: inline-block;
+	position: relative;
+	width: 38px;
+	height: 38px;
+	padding: 2px;
+	margin: 4px;
+	border-radius: 40px;
+	background-color: white;
+	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.4);
+	cursor: pointer;
+}
+#image-list .items>.item:hover {
+	background-color: cyan;
+}
+#image-list .items>.item.member-only::after {
+	display: block;
+	position: absolute;
+	width: 20px;
+	left: 20px;
+	bottom: 2px;
+	padding: 0px 4px;
+	content: "회원";
+	font-size: 10px;
+	border-radius: 4px;
+	background-color: greenyellow;
+	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.4);
+}
+#image-list .items>.item>.content {
+	width: 100%;
+	height: 100%;
+	border-radius: 100%;
+	box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.4);
+	overflow: hidden;
+}
+
+#text-editor .horizontal {
+	white-space: nowrap;
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding: 8px 0px;
+}
+#text-editor .horizontal::-webkit-scrollbar { height: 2px; width: 2px; }
+#text-editor .horizontal::-webkit-scrollbar-thumb { background: black; border-radius: 2px; }
+#text-editor .horizontal>.items>.item {
+	display: inline-block;
+	position: relative;
+	width: 38px;
+	height: 38px;
+	padding: 2px;
+	margin: 4px;
+	border-radius: 40px;
+	background-color: white;
+	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.4);
+	cursor: pointer;
+}
+#text-editor .horizontal>.items>.item:hover {
+	background-color: cyan;
+}
+#text-editor .horizontal>.items>.item.selected {
+	background-color: #ffc800;
+}
+#text-editor .horizontal>.items>.item.member-only::after {
+	display: block;
+	position: absolute;
+	width: 20px;
+	left: 20px;
+	bottom: 2px;
+	padding: 0px 4px;
+	content: "회원";
+	font-size: 10px;
+	border-radius: 4px;
+	background-color: greenyellow;
+	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.4);
+}
+#text-editor .horizontal>.items>.item.default::after {
+	display: block;
+	position: absolute;
+	width: 20px;
+	left: 20px;
+	top: 2px;
+	padding: 0px 4px;
+	content: "기본";
+	font-size: 10px;
+	border-radius: 4px;
+	background-color: plum;
+	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.4);
+}
+#text-editor .horizontal>.items>.item>.content {
+	width: 100%;
+	height: 100%;
+	border-radius: 100%;
+	box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.4);
+	overflow: hidden;
+}
+
+#drawer .horizontal {
+	white-space: nowrap;
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding: 8px 0px;
+}
+#drawer .horizontal::-webkit-scrollbar { height: 2px; width: 2px; }
+#drawer .horizontal::-webkit-scrollbar-thumb { background: black; border-radius: 2px; }
+#drawer .horizontal>.items>.item {
+	display: inline-block;
+	position: relative;
+	width: 38px;
+	height: 38px;
+	padding: 2px;
+	margin: 4px;
+	border-radius: 40px;
+	background-color: white;
+	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.4);
+	cursor: pointer;
+}
+#drawer .horizontal>.items>.item:hover {
+	background-color: cyan;
+}
+#drawer .horizontal>.items>.item.selected {
+	background-color: #ffc800;
+}
+#drawer .horizontal>.items>.item.member-only::after {
+	display: block;
+	position: absolute;
+	width: 20px;
+	left: 20px;
+	bottom: 2px;
+	padding: 0px 4px;
+	content: "회원";
+	font-size: 10px;
+	border-radius: 4px;
+	background-color: greenyellow;
+	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.4);
+}
+#drawer .horizontal>.items>.item.default::after {
+	display: block;
+	position: absolute;
+	width: 20px;
+	left: 20px;
+	top: 2px;
+	padding: 0px 4px;
+	content: "기본";
+	font-size: 10px;
+	border-radius: 4px;
+	background-color: plum;
+	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.4);
+}
+#drawer .horizontal>.items>.item>.content {
+	width: 100%;
+	height: 100%;
+	border-radius: 100%;
+	box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.4);
+	overflow: hidden;
+}
+</style>
+<script>
+var SampleBackgroundItems = [
+	{ id: 10001, type: "color", value: "white" },
+	{ id: 10002, type: "color", value: "black" },
+	{ id: 10003, type: "color", value: "#00ffc8" },
+	{ id: 10004, type: "color", value: "#ffc800" },
+	{ id: 10005, type: "color", value: "#c8ff00" },
+	{ id: 10006, type: "color", value: "#00c8ff" },
+	{ id: 10007, type: "color", value: "#ff0064" },
+	{ id: 10008, type: "color", value: "#c800ff" },
+	{ id: 10009, type: "color", value: "gray", memberOnly: true },
+	{ id: 10010, type: "color", value: "brown", memberOnly: true },
+	{ id: 10011, type: "color", value: "burlywood", memberOnly: true },
+	{ id: 10012, type: "image", width: 69, height: 35, value: "./images/grass-top.png", memberOnly: true },
+	{ id: 10013, type: "image", width: 69, height: 35, value: "./images/pink-top.png", memberOnly: true },
+	{ id: 10014, type: "image", width: 69, height: 35, value: "./images/blue-top.png", memberOnly: true },
+	{ id: 10015, type: "image", width: 69, height: 35, value: "./images/soil-top.png", memberOnly: true },
+	{ id: 10016, type: "image", width: 69, height: 35, value: "./images/snow-top.png", memberOnly: true },
+	{ id: 10017, type: "image", width: 69, height: 35, value: "./images/hologram-top.png", memberOnly: true },
+	{ id: 10018, type: "image", width: 69, height: 35, value: "./images/parquet-top.png", memberOnly: true },
+	{ id: 10019, type: "image", width: 69, height: 35, value: "./images/iron-top.png	", memberOnly: true },
+	{ id: 10020, type: "pattern", width: 69, height: 35, value: "./images/grass-top.png" },
+	{ id: 10021, type: "pattern", width: 69, height: 35, value: "./images/pink-top.png" },
+	{ id: 10022, type: "pattern", width: 69, height: 35, value: "./images/blue-top.png" },
+	{ id: 10023, type: "pattern", width: 69, height: 35, value: "./images/soil-top.png" },
+	{ id: 10024, type: "pattern", width: 69, height: 35, value: "./images/snow-top.png" },
+	{ id: 10025, type: "pattern", width: 69, height: 35, value: "./images/hologram-top.png" },
+	{ id: 10026, type: "pattern", width: 69, height: 35, value: "./images/parquet-top.png" },
+	{ id: 10027, type: "pattern", width: 69, height: 35, value: "./images/iron-top.png" },
+];
+
+var SampleFaceItems = [
+	{ id: 20001, type: "image", width: 64, height: 64, value: "./images/sample/face/6955235_casper_ghost_halloween_phantom_icon.png" },
+	{ id: 20002, type: "image", width: 64, height: 64, value: "./images/sample/face/1679538_elf_emoji_emoticon_happy_smile_icon.png", memberOnly: true },
+	{ id: 20003, type: "image", width: 64, height: 64, value: "./images/sample/face/1679555_emoji_emoticon_happy_santa_smile_icon.png", memberOnly: true },
+	{ id: 20004, type: "image", width: 64, height: 64, value: "./images/sample/face/1679569_deer_emoji_emoticon_happy_reindeer_icon.png", memberOnly: true },
+	{ id: 20005, type: "image", width: 64, height: 64, value: "./images/sample/face/1679609_emoji_emoticon_man_smile_smiley_icon.png", memberOnly: true },
+	{ id: 20006, type: "image", width: 64, height: 64, value: "./images/sample/face/2291007_dead_face_halloween_smiley_undead_icon.png", memberOnly: true },
+	{ id: 20007, type: "image", width: 64, height: 64, value: "./images/sample/face/4927756_emoji_face_poo_shit_icon.png", memberOnly: true },
+	{ id: 20008, type: "image", width: 64, height: 64, value: "./images/sample/face/5627745_avatar_face_female_people_profile_icon.png", memberOnly: true },
+	{ id: 20009, type: "image", width: 64, height: 64, value: "./images/sample/face/7536533_avatar_face_girl_female_woman_icon.png", memberOnly: true },
+	{ id: 20010, type: "image", width: 64, height: 64, value: "./images/sample/face/7536534_avatar_face_girl_female_woman_icon.png", memberOnly: true },
+	{ id: 20011, type: "image", width: 64, height: 64, value: "./images/sample/face/7536535_avatar_face_girl_female_woman_icon.png", memberOnly: true },
+	{ id: 20012, type: "image", width: 64, height: 64, value: "./images/sample/face/7536536_avatar_face_man_boy_male_icon.png", memberOnly: true },
+	{ id: 20013, type: "image", width: 64, height: 64, value: "./images/sample/face/7536537_avatar_face_girl_female_woman_icon.png", memberOnly: true },
+	{ id: 20014, type: "image", width: 64, height: 64, value: "./images/sample/face/7536538_avatar_face_man_boy_male_icon.png", memberOnly: true },
+	{ id: 20015, type: "image", width: 64, height: 64, value: "./images/sample/face/7536539_avatar_face_man_boy_male_icon.png", memberOnly: true },
+	{ id: 20016, type: "image", width: 64, height: 64, value: "./images/sample/face/7536540_avatar_face_man_boy_male_icon.png", memberOnly: true },
+	{ id: 20017, type: "image", width: 64, height: 64, value: "./images/sample/face/7536541_avatar_face_male_profile_smiley_icon.png", memberOnly: true },
+	{ id: 20018, type: "image", width: 64, height: 64, value: "./images/sample/face/7536542_avatar_face_man_boy_male_icon.png", memberOnly: true },
+];
+
+var SampleStickerItems = [
+	{ id: 30001, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679536_animal_deer_forest_happy_reindeer_icon.png" },
+	{ id: 30002, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679538_elf_emoji_emoticon_happy_smile_icon.png" },
+	{ id: 30003, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679542_wand_tool_magic_design_christmas_icon.png" },
+	{ id: 30004, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679543_candy_dessert_sweet_sweets_wrapper_icon.png" },
+	{ id: 30005, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679550_christmas_clothes_clothing_fashion_sock_icon.png" },
+	{ id: 30006, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679555_emoji_emoticon_happy_santa_smile_icon.png" },
+	{ id: 30007, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679556_elf_happy_helper_person_santa_icon.png" },
+	{ id: 30008, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679562_child_santa_toy_game_santa claus_icon.png", memberOnly: true },
+	{ id: 30009, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679566_christmas_cookie_dessert_gingerbread_man_icon.png" },
+	{ id: 30010, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679567_clothes_clothing_cold_fashion_glove_icon.png" },
+	{ id: 30011, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679569_deer_emoji_emoticon_happy_reindeer_icon.png" },
+	{ id: 30012, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679573_bow_candy_cane_ribbon_sweets_icon.png", memberOnly: true },
+	{ id: 30013, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679579_angel_christmas_decorate_decoration_wings_icon.png" },
+	{ id: 30014, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679605_candle_decor_decoration_fire_flame_icon.png" },
+	{ id: 30015, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679609_emoji_emoticon_man_smile_smiley_icon.png" },
+	{ id: 30016, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679614_bright_christmas_decorate_decoration_favourite_icon.png" },
+	{ id: 30017, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679639_bow_box_gift_package_present_icon.png" },
+	{ id: 30018, type: "image", width: 64, height: 64, value: "./images/sample/sticker/1679653_christmas_ice_snow_cold_snowflake_icon.png" },
+	{ id: 30019, type: "image", width: 64, height: 64, value: "./images/sample/sticker/2291007_dead_face_halloween_smiley_undead_icon.png" },
+	{ id: 30020, type: "image", width: 64, height: 64, value: "./images/sample/sticker/4927756_emoji_face_poo_shit_icon.png" },
+	{ id: 30021, type: "image", width: 64, height: 64, value: "./images/sample/sticker/5627745_avatar_face_female_people_profile_icon.png" },
+	{ id: 30022, type: "image", width: 64, height: 64, value: "./images/sample/sticker/5928555_clean_hand_hygiene_soap_wash_icon.png" },
+	{ id: 30023, type: "image", width: 64, height: 64, value: "./images/sample/sticker/7536533_avatar_face_girl_female_woman_icon.png", memberOnly: true },
+	{ id: 30024, type: "image", width: 64, height: 64, value: "./images/sample/sticker/7536534_avatar_face_girl_female_woman_icon.png", memberOnly: true },
+	{ id: 30025, type: "image", width: 64, height: 64, value: "./images/sample/sticker/7536535_avatar_face_girl_female_woman_icon.png", memberOnly: true },
+	{ id: 30026, type: "image", width: 64, height: 64, value: "./images/sample/sticker/7536536_avatar_face_man_boy_male_icon.png" },
+	{ id: 30027, type: "image", width: 64, height: 64, value: "./images/sample/sticker/7536537_avatar_face_girl_female_woman_icon.png" },
+	{ id: 30028, type: "image", width: 64, height: 64, value: "./images/sample/sticker/7536538_avatar_face_man_boy_male_icon.png" },
+	{ id: 30029, type: "image", width: 64, height: 64, value: "./images/sample/sticker/7536539_avatar_face_man_boy_male_icon.png" },
+	{ id: 30030, type: "image", width: 64, height: 64, value: "./images/sample/sticker/7536540_avatar_face_man_boy_male_icon.png" },
+	{ id: 30031, type: "image", width: 64, height: 64, value: "./images/sample/sticker/7536541_avatar_face_male_profile_smiley_icon.png" },
+	{ id: 30032, type: "image", width: 64, height: 64, value: "./images/sample/sticker/7536542_avatar_face_man_boy_male_icon.png" },
+];
+
+var SampleFontColorItems = [
+	{ id: 1001, value: "black", default: true },
+	{ id: 1002, value: "white" },
+	{ id: 1003, value: "#00ffc8" },
+	{ id: 1004, value: "#ffc800" },
+	{ id: 1005, value: "#c8ff00" },
+	{ id: 1006, value: "#00c8ff" },
+	{ id: 1007, value: "#ff0064" },
+	{ id: 1008, value: "#c800ff" },
+	{ id: 1009, value: "gray", memberOnly: true },
+	{ id: 1010, value: "brown", memberOnly: true },
+	{ id: 1011, value: "burlywood", memberOnly: true },
+];
+
+var SampleFontBackgroundColorItems = [
+	{ id: 2001, value: "transparent", default: true },
+	{ id: 2002, value: "black" },
+	{ id: 2003, value: "white" },
+	{ id: 2004, value: "#00ffc8" },
+	{ id: 2005, value: "#ffc800" },
+	{ id: 2006, value: "#c8ff00" },
+	{ id: 2007, value: "#00c8ff" },
+	{ id: 2008, value: "#ff0064" },
+	{ id: 2009, value: "#c800ff" },
+	{ id: 2010, value: "gray", memberOnly: true },
+	{ id: 2011, value: "brown", memberOnly: true },
+	{ id: 2012, value: "burlywood", memberOnly: true },
+];
+
+var SampleFontFamilyItems = [
+	{ id: 3001, value: "sans-serif", default: true },
+	{ id: 3002, value: "Arial" },
+	{ id: 3003, value: "monospace" },
+	{ id: 3004, value: "cursive" },
+	{ id: 3005, value: "serif" },
+	{ id: 3006, value: "Helvetica" },
+	{ id: 3011, value: "sans-serif", bold: true },
+	{ id: 3012, value: "Arial", bold: true },
+	{ id: 3013, value: "monospace", bold: true },
+	{ id: 3014, value: "cursive", bold: true },
+	{ id: 3015, value: "serif", bold: true },
+	{ id: 3016, value: "Helvetica", bold: true },
+	{ id: 3021, value: "sans-serif", italic: true },
+	{ id: 3022, value: "Arial", italic: true },
+	{ id: 3023, value: "monospace", italic: true },
+	{ id: 3024, value: "cursive", italic: true },
+	{ id: 3025, value: "serif", italic: true },
+	{ id: 3026, value: "Helvetica", italic: true },
+	{ id: 3031, value: "sans-serif", bold: true, italic: true, memberOnly: true },
+	{ id: 3032, value: "Arial", bold: true, italic: true, memberOnly: true },
+	{ id: 3033, value: "monospace", bold: true, italic: true, memberOnly: true },
+	{ id: 3034, value: "cursive", bold: true, italic: true, memberOnly: true },
+	{ id: 3035, value: "serif", bold: true, italic: true, memberOnly: true },
+	{ id: 3036, value: "Helvetica", bold: true, italic: true, memberOnly: true },
+];
+
+var SampleFontSizeItems = [
+	{ id: 4002, value: 16, default: true },
+	{ id: 4003, value: 20 },
+	{ id: 4004, value: 24 },
+	{ id: 4005, value: 28, memberOnly: true },
+];
+
+var SampleStrokeColorItems = [
+	{ id: 5001, value: "black", default: true },
+	{ id: 5002, value: "white" },
+	{ id: 5003, value: "#00ffc8" },
+	{ id: 5004, value: "#ffc800" },
+	{ id: 5005, value: "#c8ff00" },
+	{ id: 5006, value: "#00c8ff" },
+	{ id: 5007, value: "#ff0064" },
+	{ id: 5008, value: "#c800ff" },
+	{ id: 5009, value: "gray", memberOnly: true },
+	{ id: 5010, value: "brown", memberOnly: true },
+	{ id: 5011, value: "burlywood", memberOnly: true },
+];
+
+var SampleStrokeWidthItems = [
+	{ id: 6001, value: 1, default: true },
+	{ id: 6002, value: 2 },
+	{ id: 6003, value: 4 },
+	{ id: 6004, value: 6, memberOnly: true },
+	{ id: 6005, value: 8, memberOnly: true },
+	{ id: 6006, value: 12, memberOnly: true },
+	{ id: 6007, value: 16, memberOnly: true },
+	{ id: 6008, value: 20, memberOnly: true },
+	{ id: 6009, value: 24, memberOnly: true },
+];
+
+</script>
+</head>
+
+<body>
+
+<div id="app">
+	<div class="head">
+		<div class="left" onclick="history.back()">뒤로</div>
+		<div class="title">초대장 꾸미기 데모</div>
+		<div class="right" onclick="completeBoard()">완성</div>
+	</div>
+	<div class="content">
+		<div class="board" style="width: 100%; height: 100%;"></div>
+		<div id="image-list" class="overlay">
+			<div class="content">
+				<div style="font-size: 12px; margin: 20px 4px 8px;">항목를 선택하세요</div>
+				<div class="items" style="margin: 20px 4px 8px;"></div>
+			</div>
+		</div>
+		<div id="text-editor" class="overlay">
+			<div style="display: flex; flex-direction: column; align-items: center; position: absolute; left: 0px; top: -140px; width: 100%; text-align: center;">
+				<div style="width: 80px; font-size: 12px; background-color: white; border: 1px solid gray; border-bottom: none; border-radius: 4px 4px 0px 0px;">미리보기</div>
+				<div id="text-editor-preview" style="display: block; white-space: nowrap; left: 12px; right: 12px; height: 48px; padding: 0px 12px; min-width: 120px; max-width: 80%; line-height: 48px; border: 1px solid gray; border-radius: 12px; text-overflow: ellipsis; overflow: hidden;"></div>
+				<div><input type="button" style="width: 120px; height: 32px; margin: 8px;" value="카드에 추가하기" onclick="createText()"></div>
+			</div>
+			<div class="content">
+				<div style="font-size: 12px; margin: 20px 4px 8px;">문구를 입력하세요</div>
+				<div style="padding: 0px 8px; border-bottom: 1px solid black;">
+					<input class="text-input" type="text" placeholder="여기에 문구를 입력하세요" style="width: 100%; height: 32px; outline: none; border: none; border-radius: 0px; background-color: transparent;" onchange="updateTextEditorPreview()" oninput="updateTextEditorPreview()">
+				</div>
+				<div style="font-size: 12px; margin: 20px 4px 8px;">글씨 색상을 선택하세요</div>
+				<div id="font-colors" class="horizontal">
+					<div class="items"></div>
+				</div>
+				<div style="font-size: 12px; margin: 20px 4px 8px;">배경 색상을 선택하세요</div>
+				<div id="font-bgcolors" class="horizontal">
+					<div class="items"></div>
+				</div>
+				<div style="font-size: 12px; margin: 20px 4px 8px;">글꼴을 선택하세요</div>
+				<div id="font-families" class="horizontal">
+					<div class="items"></div>
+				</div>
+				<div style="font-size: 12px; margin: 20px 4px 8px;">글씨 크기를 선택하세요</div>
+				<div id="font-sizes" class="horizontal">
+					<div class="items"></div>
+				</div>
+			</div>
+		</div>
+		<div id="drawer" class="overlay">
+			<div class="content">
+				<div style="font-size: 12px; margin: 20px 4px 8px;">그리기 색상을 선택하세요</div>
+				<div id="stroke-colors" class="horizontal">
+					<div class="items"></div>
+				</div>
+				<div style="font-size: 12px; margin: 20px 4px 8px;">그리기 굵기를 선택하세요</div>
+				<div id="stroke-widths" class="horizontal">
+					<div class="items"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="foot">
+		<div class="button" onclick="showBackgroundList()"><div class="floating">배경</div></div>
+		<div class="button" onclick="showFaceList()"><div class="floating">얼굴</div></div>
+		<div class="button" onclick="showStickerList()"><div class="floating">스티커</div></div>
+		<div class="button" onclick="showTextEditor()"><div class="floating">문구</div></div>
+		<div class="button" onclick="showDrawer()"><div class="floating">그리기</div></div>
+		<div class="button" onclick="downloadImage()"><div class="floating">저장</div></div>
+	</div>
+</div>
+
+<!-- For test -->
+<div id="app-resizer" style="
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	left: 100%;
+	top: 100%;
+	margin-left: -24px;
+	margin-top: -24px;
+	background-image: url(./icons/resize.png);
+	background-position: center;
+	background-size: 100%;
+	z-index: 100;
+	cursor: se-resize;
+"></div>
+
+<script type="text/javascript" src="./libs/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(() => {
+	var resizing = false;
+	var appWidth = null;
+	var appHeight = null;
+	var lastPointerX = null;
+	var lastPointerY = null;
+
+	var onResizeStart = (event) => {
+		if (resizing) {
+			return;
+		}
+
+		resizing = true;
+		appWidth = $("#app").width();
+		appHeight = $("#app").height();
+		
+		var pointer = event.targetTouches? event.targetTouches[0] : event;
+		var pointerX = pointer.pageX;
+		var pointerY = pointer.pageY;
+
+		lastPointerX = pointerX;
+		lastPointerY = pointerY;
+		
+		if (event.type == "touchstart") {
+			event.preventDefault(); //for Mobile
+		}
+	};
+
+	var onResize = (event) => {
+		if (resizing == false) {
+			return;
+		}
+
+		var pointer = event.targetTouches? event.targetTouches[0] : event;
+		var pointerX = pointer.pageX;
+		var pointerY = pointer.pageY;
+
+		appWidth += pointerX - lastPointerX;
+		appHeight += pointerY - lastPointerY;
+		$("#app-resizer").css({ left: appWidth + "px", top: appHeight + "px" });
+		$("#app").css({ width: appWidth + "px", height: appHeight + "px" });
+
+		lastPointerX = pointerX;
+		lastPointerY = pointerY;
+
+		// console.log("Resized: " + appWidth + " x " + appHeight);
+		
+		if (event.type == "touchstart") {
+			event.preventDefault(); //for Mobile
+		}
+	};
+
+	var onResizeFinish = (event) => {
+		if (resizing == false) {
+			return;
+		}
+
+		resizing = false;
+	};
+
+	$("#app-resizer").on("mousedown", onResizeStart);
+	$(document).on("mousemove", onResize);
+	$(document).on("mouseup", onResizeFinish);
+	$("#app-resizer").on("touchstart", onResizeStart);
+	$(document).on("touchmove", onResize);
+	$(document).on("touchend", onResizeFinish);
+});
+</script>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="./js/view/board/HanulseBoardView.js"></script>
+<script>
+$(document.body).ready(() => {
+	var boardView = new HanulseBoardView($(".board"), {
+		width: 520,
+		height: 640,
+	});
+
+	$("#add-image-button").click(() => boardView.createItem("image", 52, 60));
+	$("#add-text-button").click(() => boardView.createItem("text", 100, 20));
+
+	$(".content").on("mousedown", (event) => {
+		var $target = $(event.target);
+		if ($target.hasClass("overlay")) {
+			return;
+		}
+
+		var $overlay = $target.parents(".overlay");
+		if ($overlay.length == 0) {
+			window.hideOverlay();
+		}
+	});
+
+	$(".content").on("touchstart", (event) => {
+		var $target = $(event.target);
+		if ($target.hasClass("overlay")) {
+			return;
+		}
+
+		var $overlay = $target.parents(".overlay");
+		if ($overlay.length == 0) {
+			window.hideOverlay();
+		}
+	});
+
+	var createBackgroundItemElement = (item) => {
+		var $e = $("<div class=\"item\"> data-item-id=\"" + item.id + "\"");
+		var $content = $("<div class=\"content\">");
+		
+		if (item.type == "color") {
+			$content.css({ backgroundColor: item.value });
+			$e.click(() => boardView.setBackground(item));
+		} else if (item.type == "pattern") {
+			$content.css({
+				backgroundImage: "url(\"" + item.value + "\")",
+				backgroundPosition: "50%",
+				backgroundSize: "120%",
+			});
+			$e.click(() => boardView.setBackground(item));
+		} else if (item.type == "image") {
+			$content.css({
+				backgroundImage: "url(\"" + item.value + "\")",
+				backgroundPosition: "50%",
+				backgroundSize: "120%",
+			});
+			$e.click(() => boardView.setBackground(item));
+		}
+
+		if (item.memberOnly) {
+			$e.addClass("member-only");
+		}
+
+		$e.append($content);
+
+		return $e;
+	};
+
+	var createStickerItemElement = (item) => {
+		var $e = $("<div class=\"item\"> data-item-id=\"" + item.id + "\"");
+		var $content = $("<div class=\"content\">");
+		
+		if (item.type == "image") {
+			$content.css({
+				backgroundImage: "url(\"" + item.value + "\")",
+				backgroundPosition: "50%",
+				backgroundSize: "120%",
+			});
+			$e.click(() => boardView.createItem(item));
+		}
+
+		if (item.memberOnly) {
+			$e.addClass("member-only");
+		}
+
+		$e.append($content);
+
+		return $e;
+	};
+
+	var _selectedFontColorItem = null;
+	var createFontColorItemElement = (item) => {
+		var $e = $("<div class=\"item\"> data-item-id=\"" + item.id + "\"");
+		var $content = $("<div class=\"content\">");
+		
+		$content.css({
+			backgroundColor: item.value,
+		});
+		$e.click(() => {
+			$("#font-colors .item").removeClass("selected");
+			$e.addClass("selected");
+			_selectedFontColorItem = item;
+
+			window.updateTextEditorPreview();
+		});
+
+		if (item.memberOnly) {
+			$e.addClass("member-only");
+		}
+
+		if (item.default) {
+			$e.addClass("default");
+			$e.addClass("selected");
+			_selectedFontColorItem = item;
+		}
+
+		$e.append($content);
+
+		return $e;
+	};
+
+	var _selectedFontBackgroundColorItem = null;
+	var createFontBackgroundColorItemElement = (item) => {
+		var $e = $("<div class=\"item\"> data-item-id=\"" + item.id + "\"");
+		var $content = $("<div class=\"content\">");
+		
+		$content.css({
+			backgroundColor: item.value,
+		});
+		$e.click(() => {
+			$("#font-bgcolors .item").removeClass("selected");
+			$e.addClass("selected");
+			_selectedFontBackgroundColorItem = item;
+
+			window.updateTextEditorPreview();
+		});
+
+		if (item.memberOnly) {
+			$e.addClass("member-only");
+		}
+
+		if (item.default) {
+			$e.addClass("default");
+			$e.addClass("selected");
+			_selectedFontBackgroundColorItem = item;
+		}
+
+		$e.append($content);
+
+		return $e;
+	};
+
+	var _selectedFontFamilyItem = null;
+	var createFontFamilyItemElement = (item) => {
+		var $e = $("<div class=\"item\"> data-item-id=\"" + item.id + "\"");
+		var $content = $("<div class=\"content\">");
+		
+		$content.text("가");
+		$content.css({
+			color: "black",
+			backgroundColor: "white",
+			lineHeight: "38px",
+			textAlign: "center",
+			fontSize: "14px",
+			fontFamily: item.value,
+			fontWeight: item.bold? "bold": "normal",
+			fontStyle: item.italic? "italic": "normal",
+		});
+		$e.click(() => {
+			$("#font-families .item").removeClass("selected");
+			$e.addClass("selected");
+			_selectedFontFamilyItem = item;
+
+			window.updateTextEditorPreview();
+		});
+
+		if (item.memberOnly) {
+			$e.addClass("member-only");
+		}
+
+		if (item.default) {
+			$e.addClass("default");
+			$e.addClass("selected");
+			_selectedFontFamilyItem = item;
+		}
+
+		$e.append($content);
+
+		return $e;
+	};
+
+	var _selectedFontSizeItem = null;
+	var createFontSizeItemElement = (item) => {
+		var $e = $("<div class=\"item\"> data-item-id=\"" + item.id + "\"");
+		var $content = $("<div class=\"content\">");
+		
+		$content.text("가");
+		$content.css({
+			color: "black",
+			backgroundColor: "white",
+			lineHeight: "38px",
+			textAlign: "center",
+			fontSize: item.value + "px",
+			fontFamily: "sans-serif",
+		});
+		$e.click(() => {
+			$("#font-sizes .item").removeClass("selected");
+			$e.addClass("selected");
+			_selectedFontSizeItem = item;
+
+			window.updateTextEditorPreview();
+		});
+
+		if (item.memberOnly) {
+			$e.addClass("member-only");
+		}
+
+		if (item.default) {
+			$e.addClass("default");
+			$e.addClass("selected");
+			_selectedFontSizeItem = item;
+		}
+
+		$e.append($content);
+
+		return $e;
+	};
+
+	var _selectedStrokeColorItem = null;
+	var createStrokeColorItemElement = (item) => {
+		var $e = $("<div class=\"item\"> data-item-id=\"" + item.id + "\"");
+		var $content = $("<div class=\"content\">");
+		
+		$content.css({
+			backgroundColor: item.value,
+		});
+		$e.click(() => {
+			$("#stroke-colors .item").removeClass("selected");
+			$e.addClass("selected");
+			_selectedStrokeColorItem = item;
+
+			window.updateDrawOptions();
+		});
+
+		if (item.memberOnly) {
+			$e.addClass("member-only");
+		}
+
+		if (item.default) {
+			$e.addClass("default");
+			$e.addClass("selected");
+			_selectedStrokeColorItem = item;
+		}
+
+		$e.append($content);
+
+		return $e;
+	};
+
+	var _selectedStrokeWidthItem = null;
+	var createStrokeWidthItemElement = (item) => {
+		var $e = $("<div class=\"item\"> data-item-id=\"" + item.id + "\"");
+		var $content = $("<div class=\"content\">");
+		var $point = $("<div>");
+		
+		$content.css({
+			position: "relative",
+			backgroundColor: "white",
+		});
+		$point.css({
+			position: "relative",
+			left: "50%",
+			top: "50%",
+			width: item.value + "px",
+			height: item.value + "px",
+			marginLeft: -(item.value * 0.5) + "px",
+			marginTop: -(item.value * 0.5) + "px",
+			borderRadius: "100%",
+			backgroundColor: "black",
+		})
+		$content.append($point);
+		
+		$e.click(() => {
+			$("#stroke-widths .item").removeClass("selected");
+			$e.addClass("selected");
+			_selectedStrokeWidthItem = item;
+
+			window.updateDrawOptions();
+		});
+
+		if (item.memberOnly) {
+			$e.addClass("member-only");
+		}
+
+		if (item.default) {
+			$e.addClass("default");
+			$e.addClass("selected");
+			_selectedStrokeWidthItem = item;
+		}
+
+		$e.append($content);
+
+		return $e;
+	};
+
+	window.hideOverlay = () => {
+		$(".content>.overlay").removeClass("visibled");
+	};
+	window.saveBoardImage = () => {
+		boardView.saveImage((blob) => {
+			console.log(blob);
+		});
+	};
+	window.showBackgroundList = () => {
+		var $items = $("#image-list.overlay .items");
+		$items.empty();
+		SampleBackgroundItems.forEach(item => {
+			var $item = createBackgroundItemElement(item);
+			$items.append($item);
+		});
+		window.hideOverlay();
+		$("#image-list.overlay").addClass("visibled");
+	};
+	window.showFaceList = () => {
+		var $items = $("#image-list.overlay .items");
+		$items.empty();
+		SampleFaceItems.forEach(item => {
+			var $item = createStickerItemElement(item);
+			$items.append($item);
+		});
+		window.hideOverlay();
+		$("#image-list.overlay").addClass("visibled");
+	};
+	window.showStickerList = () => {
+		var $items = $("#image-list.overlay .items");
+		$items.empty();
+		SampleStickerItems.forEach(item => {
+			var $item = createStickerItemElement(item);
+			$items.append($item);
+		});
+		window.hideOverlay();
+		$("#image-list.overlay").addClass("visibled");
+	};
+	window.showTextEditor = () => {
+		var $fontColorItems = $("#text-editor.overlay #font-colors>.items");
+		$fontColorItems.empty();
+		SampleFontColorItems.forEach(item => {
+			var $item = createFontColorItemElement(item);
+			$fontColorItems.append($item);
+		});
+		
+		var $fontBackgroundColorItems = $("#text-editor.overlay #font-bgcolors>.items");
+		$fontBackgroundColorItems.empty();
+		SampleFontBackgroundColorItems.forEach(item => {
+			var $item = createFontBackgroundColorItemElement(item);
+			$fontBackgroundColorItems.append($item);
+		});
+		
+		var $fontFamilyItems = $("#text-editor.overlay #font-families>.items");
+		$fontFamilyItems.empty();
+		SampleFontFamilyItems.forEach(item => {
+			var $item = createFontFamilyItemElement(item);
+			$fontFamilyItems.append($item);
+		});
+		
+		var $fontSizeItems = $("#text-editor.overlay #font-sizes>.items");
+		$fontSizeItems.empty();
+		SampleFontSizeItems.forEach(item => {
+			var $item = createFontSizeItemElement(item);
+			$fontSizeItems.append($item);
+		});
+		
+		window.updateTextEditorPreview();
+		
+		window.hideOverlay();
+		$("#text-editor.overlay").addClass("visibled");
+	};
+	window.updateTextEditorPreview = () => {
+		var text = $("#text-editor .text-input").val();
+		var color = _selectedFontColorItem.value;
+		var backgroundColor = _selectedFontBackgroundColorItem.value;
+		var fontFamily = _selectedFontFamilyItem.value;
+		var isFontBold = _selectedFontFamilyItem.bold;
+		var isFontItalic = _selectedFontFamilyItem.italic;
+		var fontSize = _selectedFontSizeItem.value;
+
+		var preview = $("#text-editor-preview");
+		preview.text(text || "");
+		preview.css({
+			color: color,
+			backgroundColor: backgroundColor,
+			fontSize: fontSize,
+			fontFamily: fontFamily,
+			fontWeight: isFontBold? "bold": "normal",
+			fontStyle: isFontItalic? "italic": "normal",
+		});
+	};
+	window.createText = () => {
+		var text = $("#text-editor .text-input").val();
+		if (text == null || text.length == 0) {
+			return;
+		}
+
+		var color = _selectedFontColorItem.value;
+		var backgroundColor = _selectedFontBackgroundColorItem.value;
+		var fontFamily = _selectedFontFamilyItem.value;
+		var isFontBold = _selectedFontFamilyItem.bold;
+		var isFontItalic = _selectedFontFamilyItem.italic;
+		var fontSize = _selectedFontSizeItem.value;
+
+		var canvas = document.createElement("canvas");
+		var context = canvas.getContext("2d");
+
+		context.font = `${isFontItalic? "italic": ""} ${isFontBold? "bold": ""} ${fontSize}px ${fontFamily}`;
+		context.textBaseline = "top";
+		var measured = context.measureText(text);
+		var width = measured.actualBoundingBoxLeft + measured.actualBoundingBoxRight + 4;
+		var height = measured.fontBoundingBoxAscent + measured.fontBoundingBoxDescent + 4;
+		
+		boardView.createItem({
+			type: "text",
+			value: text,
+			width: width,
+			height: height,
+			style: {
+				color: color,
+				backgroundColor: backgroundColor,
+				fontSize: fontSize,
+				fontFamily: fontFamily,
+				isFontBold: isFontBold,
+				isFontItalic: isFontItalic,
+			}
+		});
+
+		window.hideOverlay();
+	};
+
+	window.showDrawer = () => {
+		var $strokeColorItems = $("#drawer.overlay #stroke-colors>.items");
+		$strokeColorItems.empty();
+		SampleStrokeColorItems.forEach(item => {
+			var $item = createStrokeColorItemElement(item);
+			$strokeColorItems.append($item);
+		});
+		
+		var $strokeWidthItems = $("#drawer.overlay #stroke-widths>.items");
+		$strokeWidthItems.empty();
+		SampleStrokeWidthItems.forEach(item => {
+			var $item = createStrokeWidthItemElement(item);
+			$strokeWidthItems.append($item);
+		});
+
+		window.updateDrawOptions();
+		
+		window.hideOverlay();
+		$("#drawer.overlay").addClass("visibled");
+	};
+	window.updateDrawOptions = () => {
+		var strokeColor = _selectedStrokeColorItem.value;
+		var strokeWidth = _selectedStrokeWidthItem.value;
+
+		boardView.setDrawerStyles({
+			strokeColor: strokeColor,
+			strokeWidth: strokeWidth,
+		});
+	};
+	window.downloadImage = () => {
+		boardView.toImageBlob((blob) => {
+            saveBlob2File(
+                "card_" + Date.now() + ".png",
+                blob,
+            );
+		});
+	};
+	window.completeBoard = () => {
+		boardView.toImageBlob((blob) => {
+            var file = new File([blob], "card_" + Date.now() + ".png", { type: "image/png" });
+            var files = [file];
+
+            if (window.plugins && window.plugins.socialsharing) {
+                window.plugins.socialsharing.shareWithOptions({
+                    message: '[RSVP] 초대장을 발권하였습니다!', // not supported on some apps (Facebook, Instagram)
+                    subject: '당신을 초대합니다!', // fi. for email
+                    // files: files, // an array of filenames either locally or remotely
+                    url: 'https://www.auoi.net/board.html',
+                    // chooserTitle: 'Pick an app', // Android only, you can override the default share sheet title
+                    // appPackageName: 'com.apple.social.facebook', // Android only, you can provide id of the App you want to share with
+                    // iPadCoordinates: '0,0,0,0' //IOS only iPadCoordinates for where the popover should be point.  Format with x,y,width,height
+                });
+            } else if (navigator.share) {
+				navigator.share({
+					title: "당신을 초대합니다!",
+					text: "[RSVP] 초대장을 발권하였습니다!",
+					url: "https://www.auoi.net",
+					files: files,
+				}).then(() => {
+					// alert("초대장을 공유하였습니다.");
+				})
+				.catch((e) => {
+					console.error(e);
+					// alert("초대장을 공유하지 못하였습니다.");
+				});
+			} else {
+				// alert("초대가 지원되지 않는 브라우저입니다.");
+			}
+		});
+	};
+
+    function saveBlob2File (fileName, blob) {
+        var folder = cordova.file.externalRootDirectory + 'Download'
+        window.resolveLocalFileSystemURL(folder, function (dirEntry) {
+          console.log('file system open: ' + dirEntry.name)
+          createFile(dirEntry, fileName, blob)
+        }, onErrorLoadFs)
+      }
+
+      function createFile (dirEntry, fileName, blob) {
+        // Creates a new file
+        dirEntry.getFile(fileName, { create: true, exclusive: false }, function (fileEntry) {
+          writeFile(fileEntry, blob)
+        }, onErrorCreateFile)
+      }
+
+      function writeFile (fileEntry, dataObj) {
+        // Create a FileWriter object for our FileEntry
+        fileEntry.createWriter(function (fileWriter) {
+          fileWriter.onwriteend = function () {
+            // alert('Successful file write...')
+            alert('파일을 저장하였습니다.');
+          }
+
+          fileWriter.onerror = function (error) {
+                alert('파일 저장이 실패하였습니다.');
+          }
+          fileWriter.write(dataObj)
+        })
+      }
+
+      function onErrorLoadFs (error) {
+        console.log(error)
+        alert('파일 저장이 실패하였습니다.');
+      }
+
+      function onErrorCreateFile (error) {
+        console.log(error)
+        alert('파일 저장이 실패하였습니다.');
+      }
+});
+</script>
+</body>
+</html>

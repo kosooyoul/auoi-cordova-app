@@ -1,0 +1,257 @@
+.board {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	background-color: black;
+}
+.board .item {
+	position: absolute;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-user-drag: none;
+	transform-origin: 50% 50%;
+}
+.board .item>.content {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+    justify-content: center;
+    align-items: center;
+}
+.board .item>.content>img {
+	width: 100%;
+	height: 100%;
+}
+.board .item>.frame {
+	display: block;
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	outline: none;
+	cursor: move;
+}
+.board .item>.frame .edge-nw {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	left: -10px;
+	top: -10px;
+	user-select: none;
+	cursor: nwse-resize;
+}
+.board .item>.frame .edge-ne {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	right: -10px;
+	top: -10px;
+	user-select: none;
+	cursor: nesw-resize;
+}
+.board .item>.frame .edge-sw {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	left: -10px;
+	bottom: -10px;
+	user-select: none;
+	cursor: nesw-resize;
+}
+.board .item>.frame .edge-se {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	right: -10px;
+	bottom: -10px;
+	user-select: none;
+	cursor: nwse-resize;
+}
+.board .item>.frame .edge-n {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	left: 50%;
+	margin-left: -10px;
+	top: -10px;
+	user-select: none;
+	cursor: n-resize;
+}
+.board .item>.frame .edge-s {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	left: 50%;
+	margin-left: -10px;
+	bottom: -10px;
+	user-select: none;
+	cursor: s-resize;
+}
+.board .item>.frame .edge-w {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	left: -10px;
+	top: 50%;
+	margin-top: -10px;
+	user-select: none;
+	cursor: w-resize;
+}
+.board .item>.frame .edge-e {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	right: -10px;
+	top: 50%;
+	margin-top: -10px;
+	user-select: none;
+	cursor: e-resize;
+}
+.board .item>.frame .rotate {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	left: 50%;
+	bottom: -32px;
+	margin-left: -10px;
+	background-image: url("../icons/rotate.png");
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
+	user-select: none;
+	cursor: all-scroll;
+}
+.board .item>.frame .delete {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	left: 50%;
+	top: -32px;
+	margin-left: -10px;
+	background-image: url("../icons/delete.png");
+	background-position: center;
+	background-size: 80%;
+	background-repeat: no-repeat;
+	user-select: none;
+	cursor: pointer;
+}
+.board .item>.frame .clone {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	right: -32px;
+	top: 50%;
+	margin-top: -10px;
+	background-image: url("../icons/clone.png");
+	background-position: center;
+	background-size: 80%;
+	background-repeat: no-repeat;
+	user-select: none;
+	cursor: pointer;
+}
+.board .item>.frame .edit {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	left: -32px;
+	top: 50%;
+	margin-top: -10px;
+	background-image: url("../icons/edit.png");
+	background-position: center;
+	background-size: 90%;
+	background-repeat: no-repeat;
+	user-select: none;
+	cursor: pointer;
+}
+
+.board .item>.frame .edge-nw::after { position: absolute; content: ' '; left: 6px; top: 6px; width: 8px; height: 8px; border: 1px solid black; border-radius: 8px; background-color: white; }
+.board .item>.frame .edge-ne::after { position: absolute; content: ' '; left: 6px; top: 6px; width: 8px; height: 8px; border: 1px solid black; border-radius: 8px; background-color: white; }
+.board .item>.frame .edge-sw::after { position: absolute; content: ' '; left: 6px; top: 6px; width: 8px; height: 8px; border: 1px solid black; border-radius: 8px; background-color: white; }
+.board .item>.frame .edge-se::after { position: absolute; content: ' '; left: 6px; top: 6px; width: 8px; height: 8px; border: 1px solid black; border-radius: 8px; background-color: white; }
+.board .item>.frame .edge-n::after { position: absolute; content: ' '; left: 6px; top: 6px; width: 8px; height: 8px; border: 1px solid black; border-radius: 8px; background-color: white; }
+.board .item>.frame .edge-s::after { position: absolute; content: ' '; left: 6px; top: 6px; width: 8px; height: 8px; border: 1px solid black; border-radius: 8px; background-color: white; }
+.board .item>.frame .edge-w::after { position: absolute; content: ' '; left: 6px; top: 6px; width: 8px; height: 8px; border: 1px solid black; border-radius: 8px; background-color: white; }
+.board .item>.frame .edge-e::after { position: absolute; content: ' '; left: 6px; top: 6px; width: 8px; height: 8px; border: 1px solid black; border-radius: 8px; background-color: white; }
+
+.item:hover>.frame { border: 1px dashed black; }
+.item.selected>.frame { border: 1px dashed black; }
+
+.board .item>.frame * { display: none; }
+.board .item.selected>.frame * { display: block; }
+.board .item.selected>.frame *:hover::after { background-color: #00c8ff; }
+.board .item.selected>.frame *:active::after { background-color: #fff064; }
+
+.board .item>.frame .function.rotate:hover::after,
+.board .item>.frame .function.rotate:active::after {
+	position: absolute;
+	width: 20px;
+	left: 50%;
+	top: -20px;
+	margin-left: -14px;
+	padding: 0px 4px;
+	content: '회전';
+	font-size: 10px;
+	text-align: center;
+	color: black;
+	border: 1px solid black;
+	border-radius: 4px;
+	background-color: white;
+	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.4)
+}
+
+.board .item>.frame .function.delete:hover::after,
+.board .item>.frame .function.delete:active::after {
+	position: absolute;
+	width: 20px;
+	left: 50%;
+	top: -20px;
+	margin-left: -14px;
+	padding: 0px 4px;
+	content: '제거';
+	font-size: 10px;
+	text-align: center;
+	color: red;
+	border: 1px solid red;
+	border-radius: 4px;
+	background-color: white;
+	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.4)
+}
+
+.board .item>.frame .function.clone:hover::after,
+.board .item>.frame .function.clone:active::after {
+	position: absolute;
+	width: 20px;
+	left: 50%;
+	top: -20px;
+	margin-left: -14px;
+	padding: 0px 4px;
+	content: '복제';
+	font-size: 10px;
+	text-align: center;
+	color: black;
+	border: 1px solid black;
+	border-radius: 4px;
+	background-color: white;
+	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.4)
+}
+
+.board .item>.frame .function.edit:hover::after,
+.board .item>.frame .function.edit:active::after {
+	position: absolute;
+	width: 20px;
+	left: 50%;
+	top: -20px;
+	margin-left: -14px;
+	padding: 0px 4px;
+	content: '수정';
+	font-size: 10px;
+	text-align: center;
+	color: black;
+	border: 1px solid black;
+	border-radius: 4px;
+	background-color: white;
+	box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.4)
+}

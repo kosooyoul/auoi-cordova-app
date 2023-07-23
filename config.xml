@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="net.auoi.invitation" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>초대장 꾸미기 데모</name>
+    <description>
+        초대장 꾸미기 데모입니다.
+    </description>
+    <author email="prime@auoi.net" href="http://www.auoi.net">
+        Auoi
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="auoi-invitation:*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <resource-file src="google-services.json" target="app/google-services.json" />
+        <icon src="www/icons/cookie_filtered_and_retouched_resized_20210507.png" density="ldpi" />
+        <icon src="www/icons/cookie_filtered_and_retouched_resized_20210507.png" density="mdpi" />
+        <icon src="www/icons/cookie_filtered_and_retouched_resized_20210507.png" density="hdpi" />
+        <icon src="www/icons/cookie_filtered_and_retouched_resized_20210507.png" density="xhdpi" />
+        <icon src="www/icons/cookie_filtered_and_retouched_resized_20210507.png" density="xxhdpi" />
+        <icon src="www/icons/cookie_filtered_and_retouched_resized_20210507.png" density="xxxhdpi" />
+        <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+        <preference name="AndroidExtraFilesystems" value="files,cache, sdcard, cache-external, files-external" />
+        <preference name="Orientation" value="portrait" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+    </platform>
+</widget>
