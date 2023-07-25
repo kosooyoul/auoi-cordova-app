@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="net.auoi.invitation" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>초대장 꾸미기 데모</name>
+    <name>auoi-invitation-demo</name>
     <description>
         초대장 꾸미기 데모입니다.
     </description>
