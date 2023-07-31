@@ -12,7 +12,7 @@
     <allow-intent href="auoi-invitation:*" />
     <platform name="android">
         <allow-intent href="market:*" />
-        <!-- <resource-file src="google-services.json" target="app/google-services.json" /> -->
+        <resource-file src="google-services.json" target="app/google-services.json" />
         <icon src="www/icons/cookie_filtered_and_retouched_resized_20210507.png" density="ldpi" />
         <icon src="www/icons/cookie_filtered_and_retouched_resized_20210507.png" density="mdpi" />
         <icon src="www/icons/cookie_filtered_and_retouched_resized_20210507.png" density="hdpi" />
